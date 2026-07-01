@@ -125,6 +125,33 @@ button._previous_comment_txt {
   color: #6b7280;
 }
 
+/* Dark-mode variants for the privacy dropdown (theme: --bg6 #232E42, text --bg2). */
+._dark_wrapper ._composer_privacy_btn {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--bg2);
+}
+._dark_wrapper ._composer_privacy_btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+._dark_wrapper ._composer_privacy_ic {
+  color: var(--bg2);
+}
+._dark_wrapper ._composer_privacy_menu {
+  background: #2b3750;
+  border-color: #ffffff26;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+}
+._dark_wrapper ._composer_privacy_menu li:hover,
+._dark_wrapper ._composer_privacy_menu li._active {
+  background: rgba(255, 255, 255, 0.1);
+}
+._dark_wrapper ._composer_privacy_menu strong {
+  color: var(--bg2);
+}
+._dark_wrapper ._composer_privacy_menu small {
+  color: rgba(255, 255, 255, 0.6);
+}
+
 /* Active like state tint. */
 ._feed_reaction._is_active ._feed_inner_timeline_reaction_link,
 ._comment_like._is_active {
