@@ -6,6 +6,13 @@
   padding-top: 92px;
 }
 
+/* Align the middle column's top edge with the sidebars. The sidebar wraps use
+   padding-top:18px; the middle wrap uses 10px, so the stories row sat 8px
+   higher than the Explore / You-Might-Like cards. */
+._layout_middle_wrap {
+  padding-top: 18px;
+}
+
 /* Auth submit buttons should stay on one line ("Register now"). */
 ._social_login_form_btn_link,
 ._social_registration_form_btn_link {
