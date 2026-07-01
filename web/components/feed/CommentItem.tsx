@@ -75,11 +75,7 @@ function CommentBody({
           </div>
 
           {like.count > 0 && (
-            <div
-              className="_total_reactions"
-              onClick={toggleLikers}
-              style={{ cursor: 'pointer', position: 'relative' }}
-            >
+            <div className="_total_reactions" onClick={toggleLikers}>
               <div className="_total_react">
                 <span className="_reaction_like">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -96,7 +92,7 @@ function CommentBody({
               {likersOpen && (
                 <ul
                   className="_who_liked_pop"
-                  style={{ position: 'absolute', top: '100%', left: 0, zIndex: 40 }}
+                  style={{ position: 'absolute', top: '100%', right: 0, zIndex: 40 }}
                 >
                   {loadingLikers && <li>Loading…</li>}
                   {!loadingLikers &&
