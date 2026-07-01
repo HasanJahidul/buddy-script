@@ -1,0 +1,26 @@
+# dependencies
+node_modules/
+
+# env
+.env
+.env.local
+.env.*.local
+
+# next.js
+web/.next/
+web/out/
+web/next-env.d.ts
+
+# nestjs
+api/dist/
+
+# dev image uploads (local fallback)
+web/public/uploads/
+
+# testing / coverage
+coverage/
+
+# misc
+.DS_Store
+*.log
+npm-debug.log*
