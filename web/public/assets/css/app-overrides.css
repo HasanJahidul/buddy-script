@@ -1,5 +1,24 @@
 /* Small tweaks layered on top of the provided design system. */
 
+/* The design header is position:fixed — give the feed content top room so the
+   post composer isn't tucked underneath it. */
+._main_layout ._layout_inner_wrap {
+  padding-top: 92px;
+}
+
+/* Keep the header profile avatar a sensible size. */
+._header_nav_profile img {
+  width: 40px !important;
+  height: 40px !important;
+  object-fit: cover;
+}
+
+/* Auth submit buttons should stay on one line ("Register now"). */
+._social_login_form_btn_link,
+._social_registration_form_btn_link {
+  white-space: nowrap;
+}
+
 /* Make ported buttons/links behave as interactive controls. */
 ._social_login_form_btn_link,
 ._social_registration_form_btn_link,
