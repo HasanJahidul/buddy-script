@@ -3,6 +3,7 @@ import { getCurrentUser, getInitialFeed } from '@/lib/server-api';
 import Header from '@/components/layout/Header';
 import FeedClient from '@/components/feed/FeedClient';
 import Stories from '@/components/feed/Stories';
+import DarkModeToggle from '@/components/layout/DarkModeToggle';
 import { LeftSidebar, RightSidebar } from '@/components/feed/FeedSidebars';
 
 export default async function FeedPage() {
@@ -12,6 +13,7 @@ export default async function FeedPage() {
 
   return (
     <div className="_layout _layout_main_wrapper">
+      <DarkModeToggle />
       <div className="_main_layout">
         <Header user={user} />
         <div className="container _custom_container">

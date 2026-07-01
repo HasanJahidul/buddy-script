@@ -54,14 +54,74 @@ button._previous_comment_txt {
   margin-top: 12px;
 }
 
-/* Visibility selector on the composer. */
-._visibility_select {
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 6px 10px;
+/* Facebook-style privacy selector at the top of the composer. */
+._composer_privacy_row {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 14px;
+}
+._composer_privacy {
+  position: relative;
+}
+._composer_privacy_btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #eef1f6;
+  border: none;
+  border-radius: 18px;
+  padding: 6px 12px;
   font-size: 13px;
-  color: #444;
+  font-weight: 600;
+  color: #3a4a63;
+  cursor: pointer;
+}
+._composer_privacy_btn:hover {
+  background: #e4e9f2;
+}
+._composer_privacy_ic {
+  display: inline-flex;
+  color: #3a4a63;
+}
+._composer_privacy_caret {
+  font-size: 10px;
+  line-height: 1;
+}
+._composer_privacy_menu {
+  position: absolute;
+  top: 42px;
+  left: 0;
+  z-index: 40;
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  width: 260px;
   background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.14);
+}
+._composer_privacy_menu li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+._composer_privacy_menu li:hover,
+._composer_privacy_menu li._active {
+  background: #eef4ff;
+}
+._composer_privacy_menu strong {
+  display: block;
+  font-size: 13px;
+  color: #111827;
+}
+._composer_privacy_menu small {
+  display: block;
+  font-size: 11px;
+  color: #6b7280;
 }
 
 /* Active like state tint. */
