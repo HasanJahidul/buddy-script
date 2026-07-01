@@ -13,41 +13,55 @@ import type {
   AuthUser,
   CommentDto,
   Page,
+  PublicUser,
   ToggleLikeResult,
 } from '@/lib/types';
 import CommentForm from './CommentForm';
-import WhoLiked from './WhoLiked';
 
 function CommentBody({
   comment,
-  currentUser,
   isReply,
   onReplyClick,
 }: {
   comment: CommentDto;
-  currentUser: AuthUser;
   isReply: boolean;
   onReplyClick?: () => void;
 }) {
   const like = useLike(comment.likedByMe, comment.likeCount, () =>
     apiPost<ToggleLikeResult>(`/comments/${comment.id}/like`),
   );
+  const [likersOpen, setLikersOpen] = useState(false);
+  const [likers, setLikers] = useState<PublicUser[] | null>(null);
+  const [loadingLikers, setLoadingLikers] = useState(false);
+
+  async function toggleLikers() {
+    const next = !likersOpen;
+    setLikersOpen(next);
+    if (next && !likers && !loadingLikers) {
+      setLoadingLikers(true);
+      try {
+        const page = await apiGet<Page<PublicUser>>(
+          `/comments/${comment.id}/likers`,
+        );
+        setLikers(page.items);
+      } finally {
+        setLoadingLikers(false);
+      }
+    }
+  }
 
   return (
-    <div className="_comment_main" style={{ display: 'flex', gap: 10 }}>
+    <div className="_comment_main">
       <div className="_comment_image">
         <span className="_comment_image_link">
           <img
             src={avatarSrc(comment.author)}
             alt={fullName(comment.author)}
             className="_comment_img1"
-            width={36}
-            height={36}
-            style={{ borderRadius: '50%', objectFit: 'cover' }}
           />
         </span>
       </div>
-      <div className="_comment_area" style={{ flex: 1 }}>
+      <div className="_comment_area">
         <div className="_comment_details">
           <div className="_comment_details_top">
             <div className="_comment_name">
@@ -59,38 +73,63 @@ function CommentBody({
               <span style={{ whiteSpace: 'pre-wrap' }}>{comment.content}</span>
             </p>
           </div>
-          <div className="_total_reactions">
-            <WhoLiked
-              count={like.count}
-              topLikers={like.liked ? [currentUser] : []}
-              likersPath={`/comments/${comment.id}/likers`}
-            />
-          </div>
+
+          {like.count > 0 && (
+            <div
+              className="_total_reactions"
+              onClick={toggleLikers}
+              style={{ cursor: 'pointer', position: 'relative' }}
+            >
+              <div className="_total_react">
+                <span className="_reaction_like">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
+                  </svg>
+                </span>
+                <span className="_reaction_heart">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                  </svg>
+                </span>
+              </div>
+              <span className="_total">{like.count}</span>
+              {likersOpen && (
+                <ul
+                  className="_who_liked_pop"
+                  style={{ position: 'absolute', top: '100%', left: 0, zIndex: 40 }}
+                >
+                  {loadingLikers && <li>Loading…</li>}
+                  {!loadingLikers &&
+                    likers?.map((u) => <li key={u.id}>{fullName(u)}</li>)}
+                  {!loadingLikers && likers && like.count > likers.length && (
+                    <li>…and more</li>
+                  )}
+                </ul>
+              )}
+            </div>
+          )}
+
           <div className="_comment_reply">
             <div className="_comment_reply_num">
-              <ul
-                className="_comment_reply_list"
-                style={{ display: 'flex', gap: 12, listStyle: 'none', padding: 0, margin: 0 }}
-              >
+              <ul className="_comment_reply_list">
                 <li>
                   <span
                     className={`_comment_like ${like.liked ? '_is_active' : ''}`}
                     onClick={like.onToggle}
                     style={{ cursor: 'pointer' }}
                   >
-                    {like.liked ? 'Liked' : 'Like'}
-                    {like.count > 0 ? ` · ${like.count}` : ''}
+                    {like.liked ? 'Liked' : 'Like'}.
                   </span>
                 </li>
                 {!isReply && (
                   <li>
                     <span onClick={onReplyClick} style={{ cursor: 'pointer' }}>
-                      Reply
+                      Reply.
                     </span>
                   </li>
                 )}
                 <li>
-                  <span className="_time_link">{timeAgo(comment.createdAt)}</span>
+                  <span className="_time_link">.{timeAgo(comment.createdAt)}</span>
                 </li>
               </ul>
             </div>
@@ -152,7 +191,6 @@ export default function CommentItem({
     <div className="_comment_wrapper _mar_b16">
       <CommentBody
         comment={comment}
-        currentUser={currentUser}
         isReply={false}
         onReplyClick={() => setReplyOpen((v) => !v)}
       />
@@ -180,12 +218,7 @@ export default function CommentItem({
 
         {repliesOpen &&
           replies.map((reply) => (
-            <CommentBody
-              key={reply.id}
-              comment={reply}
-              currentUser={currentUser}
-              isReply
-            />
+            <CommentBody key={reply.id} comment={reply} isReply />
           ))}
 
         {repliesOpen && repliesQuery.hasNextPage && (
