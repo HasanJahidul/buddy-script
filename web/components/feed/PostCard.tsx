@@ -21,6 +21,11 @@ export default function PostCard({
   const [commentsOpen, setCommentsOpen] = useState(false);
   const [commentCount, setCommentCount] = useState(post.commentCount);
 
+  // Show the current user's avatar in the who-liked stack optimistically:
+  // drop them from the server list, then prepend if they currently like it.
+  const others = post.topLikers.filter((u) => u.id !== currentUser.id);
+  const displayLikers = like.liked ? [currentUser, ...others] : others;
+
   return (
     <div className="_feed_inner_timeline_post_area _b_radious6 _padd_b24 _padd_t24 _mar_b16">
       <div className="_feed_inner_timeline_content _padd_r24 _padd_l24">
@@ -81,7 +86,7 @@ export default function PostCard({
         >
           <WhoLiked
             count={like.count}
-            topLikers={post.topLikers}
+            topLikers={displayLikers}
             likersPath={`/posts/${post.id}/likers`}
           />
           <div className="_feed_inner_timeline_total_reacts_txt">

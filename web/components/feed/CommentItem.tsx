@@ -62,7 +62,7 @@ function CommentBody({
           <div className="_total_reactions">
             <WhoLiked
               count={like.count}
-              topLikers={[]}
+              topLikers={like.liked ? [currentUser] : []}
               likersPath={`/comments/${comment.id}/likers`}
             />
           </div>
