@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 import { apiPost, ApiError } from '@/lib/api';
 import { avatarSrc } from '@/lib/format';
 import type { AuthUser, PostDto, Visibility } from '@/lib/types';
+import PrivacyDropdown from './PrivacyDropdown';
 
 async function uploadImage(file: File): Promise<string> {
   const { uploadUrl, publicUrl } = await apiPost<{
@@ -19,23 +20,6 @@ async function uploadImage(file: File): Promise<string> {
   return publicUrl;
 }
 
-const GlobeIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-    <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
-    <path
-      d="M3 12h18M12 3c2.5 2.5 2.5 15 0 18M12 3c-2.5 2.5-2.5 15 0 18"
-      stroke="currentColor"
-      strokeWidth="1.6"
-    />
-  </svg>
-);
-const LockIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-    <rect x="4" y="10" width="16" height="11" rx="2" stroke="currentColor" strokeWidth="1.6" />
-    <path d="M8 10V7a4 4 0 118 0v3" stroke="currentColor" strokeWidth="1.6" />
-  </svg>
-);
-
 export default function PostComposer({
   currentUser,
   onCreated,
@@ -45,13 +29,11 @@ export default function PostComposer({
 }) {
   const [content, setContent] = useState('');
   const [visibility, setVisibility] = useState<Visibility>('PUBLIC');
-  const [privacyOpen, setPrivacyOpen] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
-  const isPublic = visibility === 'PUBLIC';
 
   function pickImage(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0] ?? null;
@@ -68,11 +50,6 @@ export default function PostComposer({
     setFile(null);
     setPreview(null);
     if (fileRef.current) fileRef.current.value = '';
-  }
-
-  function choose(v: Visibility) {
-    setVisibility(v);
-    setPrivacyOpen(false);
   }
 
   async function submit() {
@@ -103,51 +80,6 @@ export default function PostComposer({
 
   return (
     <div className="_feed_inner_text_area _b_radious6 _padd_b24 _padd_t24 _padd_r24 _padd_l24 _mar_b16">
-      {/* Privacy selector (Facebook-style) at the top of the card */}
-      <div className="_composer_privacy_row">
-        <div className="_composer_privacy">
-          <button
-            type="button"
-            className="_composer_privacy_btn"
-            onClick={() => setPrivacyOpen((v) => !v)}
-          >
-            <span className="_composer_privacy_ic">
-              {isPublic ? <GlobeIcon /> : <LockIcon />}
-            </span>
-            <span>{isPublic ? 'Public' : 'Private'}</span>
-            <span className="_composer_privacy_caret">▾</span>
-          </button>
-          {privacyOpen && (
-            <ul className="_composer_privacy_menu">
-              <li
-                className={isPublic ? '_active' : ''}
-                onClick={() => choose('PUBLIC')}
-              >
-                <span className="_composer_privacy_ic">
-                  <GlobeIcon />
-                </span>
-                <div>
-                  <strong>Public</strong>
-                  <small>Anyone can see this post</small>
-                </div>
-              </li>
-              <li
-                className={!isPublic ? '_active' : ''}
-                onClick={() => choose('PRIVATE')}
-              >
-                <span className="_composer_privacy_ic">
-                  <LockIcon />
-                </span>
-                <div>
-                  <strong>Private</strong>
-                  <small>Only you can see this post</small>
-                </div>
-              </li>
-            </ul>
-          )}
-        </div>
-      </div>
-
       <div className="_feed_inner_text_area_box">
         <div className="_feed_inner_text_area_box_image">
           <img src={avatarSrc(currentUser)} alt="Image" className="_txt_img" />
@@ -234,18 +166,21 @@ export default function PostComposer({
             </button>
           </div>
         </div>
-        <div className="_feed_inner_text_area_btn">
-          <button
-            type="button"
-            className="_feed_inner_text_area_btn_link"
-            onClick={submit}
-            disabled={submitting}
-          >
-            <svg className="_mar_img" xmlns="http://www.w3.org/2000/svg" width="14" height="13" fill="none" viewBox="0 0 14 13">
-              <path fill="#fff" fillRule="evenodd" d="M6.37 7.879l2.438 3.955a.335.335 0 00.34.162c.068-.01.23-.05.289-.247l3.049-10.297a.348.348 0 00-.09-.35.341.341 0 00-.34-.088L1.75 4.03a.34.34 0 00-.247.289.343.343 0 00.16.347L5.666 7.17 9.2 3.597a.5.5 0 01.712.703L6.37 7.88z" clipRule="evenodd" />
-            </svg>
-            <span>{submitting ? 'Posting…' : 'Post'}</span>
-          </button>
+        <div className="_composer_actions">
+          <PrivacyDropdown value={visibility} onChange={setVisibility} />
+          <div className="_feed_inner_text_area_btn">
+            <button
+              type="button"
+              className="_feed_inner_text_area_btn_link"
+              onClick={submit}
+              disabled={submitting}
+            >
+              <svg className="_mar_img" xmlns="http://www.w3.org/2000/svg" width="14" height="13" fill="none" viewBox="0 0 14 13">
+                <path fill="#fff" fillRule="evenodd" d="M6.37 7.879l2.438 3.955a.335.335 0 00.34.162c.068-.01.23-.05.289-.247l3.049-10.297a.348.348 0 00-.09-.35.341.341 0 00-.34-.088L1.75 4.03a.34.34 0 00-.247.289.343.343 0 00.16.347L5.666 7.17 9.2 3.597a.5.5 0 01.712.703L6.37 7.88z" clipRule="evenodd" />
+              </svg>
+              <span>{submitting ? 'Posting…' : 'Post'}</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

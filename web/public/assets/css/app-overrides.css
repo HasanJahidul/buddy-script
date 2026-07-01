@@ -54,11 +54,11 @@ button._previous_comment_txt {
   margin-top: 12px;
 }
 
-/* Facebook-style privacy selector at the top of the composer. */
-._composer_privacy_row {
+/* Facebook-style privacy selector — sits in the composer action bar. */
+._composer_actions {
   display: flex;
-  justify-content: flex-end;
-  margin-bottom: 14px;
+  align-items: center;
+  gap: 12px;
 }
 ._composer_privacy {
   position: relative;
@@ -89,7 +89,8 @@ button._previous_comment_txt {
 }
 ._composer_privacy_menu {
   position: absolute;
-  top: 42px;
+  bottom: 44px;
+  top: auto;
   right: 0;
   z-index: 40;
   list-style: none;
