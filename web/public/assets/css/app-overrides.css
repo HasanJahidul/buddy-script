@@ -57,7 +57,7 @@ button._previous_comment_txt {
 /* Facebook-style privacy selector at the top of the composer. */
 ._composer_privacy_row {
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-end;
   margin-bottom: 14px;
 }
 ._composer_privacy {
@@ -90,7 +90,7 @@ button._previous_comment_txt {
 ._composer_privacy_menu {
   position: absolute;
   top: 42px;
-  left: 0;
+  right: 0;
   z-index: 40;
   list-style: none;
   margin: 0;
