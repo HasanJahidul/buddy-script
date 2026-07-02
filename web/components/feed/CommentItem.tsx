@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   useInfiniteQuery,
   useQueryClient,
@@ -149,9 +149,15 @@ export default function CommentItem({
   currentUser: AuthUser;
 }) {
   const queryClient = useQueryClient();
-  const [replyOpen, setReplyOpen] = useState(false);
   const [repliesOpen, setRepliesOpen] = useState(false);
   const [replyCount, setReplyCount] = useState(comment.replyCount);
+  const replyBoxRef = useRef<HTMLDivElement>(null);
+
+  function focusReply() {
+    replyBoxRef.current
+      ?.querySelector<HTMLTextAreaElement>('._comment_textarea')
+      ?.focus();
+  }
 
   const repliesKey = ['replies', comment.id];
   const repliesQuery = useInfiniteQuery({
@@ -170,7 +176,6 @@ export default function CommentItem({
   function handleReplyCreated(reply: CommentDto) {
     setReplyCount((c) => c + 1);
     setRepliesOpen(true);
-    setReplyOpen(false);
     queryClient.setQueryData<InfiniteData<Page<CommentDto>>>(
       repliesKey,
       (old) => {
@@ -191,19 +196,19 @@ export default function CommentItem({
       <CommentBody
         comment={comment}
         isReply={false}
-        onReplyClick={() => setReplyOpen((v) => !v)}
+        onReplyClick={focusReply}
       />
 
       <div style={{ marginLeft: 46 }}>
-        {replyOpen && (
+        <div ref={replyBoxRef}>
           <CommentForm
             postId={postId}
             parentId={comment.id}
             currentUser={currentUser}
-            placeholder="Write a reply"
+            placeholder="Write a comment"
             onCreated={handleReplyCreated}
           />
-        )}
+        </div>
 
         {!repliesOpen && replyCount > 0 && (
           <button
