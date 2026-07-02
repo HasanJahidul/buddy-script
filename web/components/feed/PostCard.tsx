@@ -163,6 +163,7 @@ export default function PostCard({
           <CommentSection
             postId={post.id}
             currentUser={currentUser}
+            commentCount={commentCount}
             onCommentAdded={() => setCommentCount((c) => c + 1)}
           />
         )}

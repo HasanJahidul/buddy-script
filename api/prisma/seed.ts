@@ -84,9 +84,10 @@ async function main() {
       content: 'Thanks Alice! More features coming soon.',
     },
   });
+  // commentCount counts top-level comments only (the reply is not counted).
   await prisma.post.update({
     where: { id: post1.id },
-    data: { commentCount: 2 },
+    data: { commentCount: 1 },
   });
 
   // Public text post by Carol.

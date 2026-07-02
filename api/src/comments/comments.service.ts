@@ -41,8 +41,10 @@ export class CommentsService {
       }
     }
 
-    const [comment] = await this.prisma.$transaction([
-      this.prisma.comment.create({
+    // commentCount tracks TOP-LEVEL comments only (replies are counted per
+    // comment via replyCount), so it drives the "View N previous comments" UI.
+    const comment = await this.prisma.$transaction(async (tx) => {
+      const created = await tx.comment.create({
         data: {
           postId,
           authorId: meId,
@@ -50,13 +52,16 @@ export class CommentsService {
           parentId: dto.parentId ?? null,
         },
         select: commentSelect,
-      }),
-      this.prisma.post.update({
-        where: { id: postId },
-        data: { commentCount: { increment: 1 } },
-        select: { id: true },
-      }),
-    ]);
+      });
+      if (!dto.parentId) {
+        await tx.post.update({
+          where: { id: postId },
+          data: { commentCount: { increment: 1 } },
+          select: { id: true },
+        });
+      }
+      return created;
+    });
     return this.toDto(comment, false);
   }
 
