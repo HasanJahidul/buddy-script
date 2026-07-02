@@ -168,6 +168,12 @@ button._previous_comment_txt {
   gap: 6px;
 }
 
+/* Gap between the reaction icon and its label (Like / Comment / Share). The
+   design only spaces the emoji-link variant, which our buttons don't use. */
+._feed_inner_timeline_reaction_link svg {
+  margin: 0 8px 0 0;
+}
+
 /* Composer image preview. */
 ._composer_preview {
   position: relative;
