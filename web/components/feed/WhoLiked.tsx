@@ -36,24 +36,20 @@ export default function WhoLiked({
 
   return (
     <div style={{ position: 'relative', display: 'inline-block' }}>
-      <div
-        className="_feed_inner_timeline_total_reacts_image"
-        onClick={toggle}
-        style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}
-      >
+      <div className="_feed_inner_timeline_total_reacts_image" onClick={toggle}>
         {topLikers.slice(0, 3).map((u, i) => (
           <img
             key={u.id}
             src={avatarSrc(u)}
             alt={fullName(u)}
             className={i === 0 ? '_react_img1' : '_react_img'}
-            width={22}
-            height={22}
-            style={{ borderRadius: '50%', objectFit: 'cover' }}
+            width={32}
+            height={32}
+            style={{ objectFit: 'cover' }}
           />
         ))}
-        <p className="_feed_inner_timeline_total_reacts_para" style={{ margin: 0 }}>
-          {count}
+        <p className="_feed_inner_timeline_total_reacts_para">
+          {count > 9 ? '9+' : count}
         </p>
       </div>
       {open && (
