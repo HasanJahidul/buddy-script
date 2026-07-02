@@ -222,3 +222,86 @@ button._previous_comment_txt {
   padding: 12px 0;
   text-align: center;
 }
+
+/* "Liked by" modal (overlay — does not shift the page layout). */
+._wl_modal_overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+._wl_modal {
+  background: #fff;
+  border-radius: 14px;
+  width: 360px;
+  max-width: 90vw;
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.3);
+}
+._wl_modal_head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid #eee;
+}
+._wl_modal_head h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+}
+._wl_modal_close {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  color: #6b7280;
+}
+._wl_modal_body {
+  padding: 8px 8px 12px;
+  overflow-y: auto;
+}
+._wl_modal_row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #222;
+}
+._wl_modal_row:hover {
+  background: #f3f5f9;
+}
+._wl_modal_avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+/* Dark mode */
+._dark_wrapper ._wl_modal {
+  background: #2b3750;
+  color: var(--bg2);
+}
+._dark_wrapper ._wl_modal_head {
+  border-color: #ffffff26;
+}
+._dark_wrapper ._wl_modal_head h4,
+._dark_wrapper ._wl_modal_row {
+  color: var(--bg2);
+}
+._dark_wrapper ._wl_modal_close {
+  color: var(--bg2);
+}
+._dark_wrapper ._wl_modal_row:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
