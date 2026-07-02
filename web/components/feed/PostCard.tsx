@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { apiPost } from '@/lib/api';
 import { avatarSrc, fullName, timeAgo } from '@/lib/format';
 import { useLike } from '@/lib/useLike';
@@ -18,16 +18,27 @@ export default function PostCard({
   const like = useLike(post.likedByMe, post.likeCount, () =>
     apiPost<ToggleLikeResult>(`/posts/${post.id}/like`),
   );
-  const [commentsOpen, setCommentsOpen] = useState(false);
   const [commentCount, setCommentCount] = useState(post.commentCount);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   // Show the current user's avatar in the who-liked stack optimistically:
   // drop them from the server list, then prepend if they currently like it.
   const others = post.topLikers.filter((u) => u.id !== currentUser.id);
   const displayLikers = like.liked ? [currentUser, ...others] : others;
 
+  // The comment section is always visible (latest comment shown by default);
+  // the Comment button / count just focuses the composer.
+  function focusComment() {
+    cardRef.current
+      ?.querySelector<HTMLTextAreaElement>('._comment_textarea')
+      ?.focus();
+  }
+
   return (
-    <div className="_feed_inner_timeline_post_area _b_radious6 _padd_b24 _padd_t24 _mar_b16">
+    <div
+      ref={cardRef}
+      className="_feed_inner_timeline_post_area _b_radious6 _padd_b24 _padd_t24 _mar_b16"
+    >
       <div className="_feed_inner_timeline_content _padd_r24 _padd_l24">
         <div className="_feed_inner_timeline_post_top">
           <div
@@ -91,10 +102,7 @@ export default function PostCard({
           />
           <div className="_feed_inner_timeline_total_reacts_txt">
             <p className="_feed_inner_timeline_total_reacts_para1">
-              <span
-                onClick={() => setCommentsOpen((v) => !v)}
-                style={{ cursor: 'pointer' }}
-              >
+              <span onClick={focusComment} style={{ cursor: 'pointer' }}>
                 <span>{commentCount}</span> Comment{commentCount === 1 ? '' : 's'}
               </span>
             </p>
@@ -132,7 +140,7 @@ export default function PostCard({
           <button
             type="button"
             className="_feed_inner_timeline_reaction_comment _feed_reaction"
-            onClick={() => setCommentsOpen((v) => !v)}
+            onClick={focusComment}
           >
             <span className="_feed_inner_timeline_reaction_link">
               <span>
@@ -159,14 +167,12 @@ export default function PostCard({
           </button>
         </div>
 
-        {commentsOpen && (
-          <CommentSection
-            postId={post.id}
-            currentUser={currentUser}
-            commentCount={commentCount}
-            onCommentAdded={() => setCommentCount((c) => c + 1)}
-          />
-        )}
+        <CommentSection
+          postId={post.id}
+          currentUser={currentUser}
+          commentCount={commentCount}
+          onCommentAdded={() => setCommentCount((c) => c + 1)}
+        />
       </div>
     </div>
   );

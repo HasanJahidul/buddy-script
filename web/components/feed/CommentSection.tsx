@@ -28,6 +28,7 @@ export default function CommentSection({
 
   const query = useInfiniteQuery({
     queryKey: commentsKey,
+    enabled: commentCount > 0,
     queryFn: ({ pageParam }) =>
       apiGet<Page<CommentDto>>(
         `/posts/${postId}/comments?limit=10${pageParam ? `&cursor=${pageParam}` : ''}`,
