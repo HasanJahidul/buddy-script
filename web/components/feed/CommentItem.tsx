@@ -125,6 +125,9 @@ function CommentBody({
                   </li>
                 )}
                 <li>
+                  <span>Share</span>
+                </li>
+                <li>
                   <span className="_time_link">.{timeAgo(comment.createdAt)}</span>
                 </li>
               </ul>

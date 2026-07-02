@@ -159,6 +159,15 @@ button._previous_comment_txt {
   font-weight: 600;
 }
 
+/* Comment action row: keep Like/Reply/Share/time on one line even when the
+   bubble is narrow (short comments), and space the items evenly. */
+._comment_reply_num {
+  white-space: nowrap;
+}
+._comment_reply_list {
+  gap: 6px;
+}
+
 /* Composer image preview. */
 ._composer_preview {
   position: relative;

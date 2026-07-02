@@ -5882,7 +5882,7 @@
 
 /*---- Comment Reply css -----*/
 ._timline_comment_main {
-    padding: 24px 24px 10px;
+    /* padding: 24px 24px 10px; */
 }
 ._comment_main {
     display: flex;
